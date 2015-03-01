@@ -41,8 +41,6 @@ Bounce button9 = Bounce(9, 5);
 // 8 buttons on the digital multiplex on pin 12
 Bounce *buttonsM0[8]; // http://nihlaeth.nl/2014/05/10/declaring-an-array-of-objects-in-arduino-cpp/
 
-
-
 void setup() {
   // Configure the pins for input mode with pullup resistors.
   // The pushbuttons connect from each pin to ground.  When
@@ -85,8 +83,10 @@ void setup() {
   }
   
   // initialize button objects for multiplex 0
+  
   for (i = 0; i < 8; i++) {
-//    buttonsM0[i] = Bounce(12, 5);  // TODO: how to phrase this?
+//    Bounce b = Bounce(12, 5);
+    buttonsM0[i] = new Bounce(12,5);  // TODO: how to phrase this?
   }
 
   // say howdy
@@ -116,6 +116,7 @@ void OnNoteOn(byte channel, byte note, byte velocity){
   }
   // ignoring all other channels.
 }
+
 void OnNoteOff(byte channel, byte note, byte velocity){
   Serial.println("note off");
   if (channel == reflectChannel) {
@@ -159,7 +160,6 @@ void loop() {
   button8.update();
   button9.update();
   
-  
   // multiplex read:
   int i;
   for (i = 0; i < 8; i++){
@@ -185,7 +185,6 @@ void loop() {
     }
   }
   
-  
   // Check each button for "falling" edge.
   // Send a MIDI Note On message when each button presses
   // Update the Joystick buttons only upon changes.
@@ -206,25 +205,32 @@ void loop() {
    }
   if (button3.fallingEdge()) {
     usbMIDI.sendNoteOn(63, 99, channel);  // 63 = D#4
-  }
+      Serial.println("pin 4 on");
+   }
   if (button4.fallingEdge()) {
     usbMIDI.sendNoteOn(64, 99, channel);  // 64 = E4
-  }
+      Serial.println("pin 5 on");
+   }
   if (button5.fallingEdge()) {
     usbMIDI.sendNoteOn(65, 99, channel);  // 65 = F4
-  }
+      Serial.println("pin 6 on");
+   }
   if (button6.fallingEdge()) {
     usbMIDI.sendNoteOn(66, 99, channel);  // 66 = F#4
-  }
+      Serial.println("pin 7 on");
+   }
   if (button7.fallingEdge()) {
     usbMIDI.sendNoteOn(67, 99, channel);  // 67 = G4
+       Serial.println("pin 8 on");
   }
   if (button8.fallingEdge()) {
     usbMIDI.sendNoteOn(68, 99, channel);  // 68 = G#4
-  }
+      Serial.println("pin 9 on");
+   }
   if (button9.fallingEdge()) {
     usbMIDI.sendNoteOn(69, 99, channel);  // 69 = A5
-  }
+      Serial.println("pin 10 on");
+   }
 
   // Check each button for "rising" edge
   // Send a MIDI Note Off message when each button releases
@@ -243,28 +249,36 @@ void loop() {
   }
   if (button2.risingEdge()) {
     usbMIDI.sendNoteOff(62, 0, channel);  // 62 = D4
-  }
+        Serial.println("pin 3 off");
+ }
   if (button3.risingEdge()) {
     usbMIDI.sendNoteOff(63, 0, channel);  // 63 = D#4
+       Serial.println("pin 4 off");
   }
   if (button4.risingEdge()) {
     usbMIDI.sendNoteOff(64, 0, channel);  // 64 = E4
+       Serial.println("pin 5 off");
   }
   if (button5.risingEdge()) {
     usbMIDI.sendNoteOff(65, 0, channel);  // 65 = F4
+       Serial.println("pin 6 off");
   }
   if (button6.risingEdge()) {
     usbMIDI.sendNoteOff(66, 0, channel);  // 66 = F#4
-  }
+        Serial.println("pin 7 off");
+ }
   if (button7.risingEdge()) {
     usbMIDI.sendNoteOff(67, 0, channel);  // 67 = G4
-  }
+        Serial.println("pin 8 off");
+ }
   if (button8.risingEdge()) {
     usbMIDI.sendNoteOff(68, 0, channel);  // 68 = G#4
-  }
+        Serial.println("pin 9 off");
+ }
   if (button9.risingEdge()) {
     usbMIDI.sendNoteOff(69, 0, channel);  // 69 = A5
-  }
+        Serial.println("pin 10 off");
+ }
 
   // MIDI Controllers should discard incoming MIDI messages.
   // http://forum.pjrc.com/threads/24179-Teensy-3-Ableton-Analog-CC-causes-midi-crash
