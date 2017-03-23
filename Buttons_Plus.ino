@@ -19,6 +19,8 @@ const int splitChannel = 12;
 boolean splitMap[128];
 // state of footswitch on pin1
 boolean pin1Closed = false;
+// Teensy 3.0 has the LED on pin 13
+const int ledPin = 13;
 // counter 
 elapsedMillis clock;
 
@@ -89,6 +91,14 @@ void setup() {
     buttonsM0[i] = new Bounce(12,5);  // TODO: how to phrase this?
   }
 
+  // initialize the digital pin as an output.
+  pinMode(ledPin, OUTPUT);
+  
+    digitalWrite(ledPin, HIGH);   // set the LED on
+  delay(1000);                  // wait for a second
+  digitalWrite(ledPin, LOW);    // set the LED off
+  delay(1000); 
+  
   // say howdy
   Serial.begin(9600); // USB is always 12 Mbit/sec
   Serial.println("Good morning!");
@@ -96,6 +106,8 @@ void setup() {
 
 // basic note reflector
 void OnNoteOn(byte channel, byte note, byte velocity){
+    digitalWrite(ledPin, HIGH);   // set the LED on
+
   Serial.println("note on");
   if (channel == reflectChannel) {
     // If the footswitch on pin1 is down, toggle the map entry for this note
@@ -118,6 +130,8 @@ void OnNoteOn(byte channel, byte note, byte velocity){
 }
 
 void OnNoteOff(byte channel, byte note, byte velocity){
+    digitalWrite(ledPin, LOW);   // set the LED on
+
   Serial.println("note off");
   if (channel == reflectChannel) {
     // If the entry for this note in the splitMap is true, send it on the split channel
